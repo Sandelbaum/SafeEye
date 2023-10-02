@@ -38,7 +38,7 @@ class _SafeEyeState extends State<SafeEye> {
       home: const LogInScreen(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0fa3b1),
+          seedColor: Colors.teal,
         ),
         brightness: Brightness.light,
         fontFamily: 'Pretendard',

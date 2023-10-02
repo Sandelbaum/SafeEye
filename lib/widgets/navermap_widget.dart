@@ -14,16 +14,15 @@ class _NaverMapWidgetState extends State<NaverMapWidget> {
   final Completer<NaverMapController> mapControllerCompleter = Completer();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NaverMap(
-          options: const NaverMapViewOptions(
-            indoorEnable: true,
-            locationButtonEnable: true,
-            consumeSymbolTapEvents: false,
-          ),
-          onMapReady: (controller) async {
-            mapControllerCompleter.complete(controller);
-          }),
+    return NaverMap(
+        options: const NaverMapViewOptions(
+          indoorEnable: true,
+          locationButtonEnable: true,
+          consumeSymbolTapEvents: false,
+        ),
+        onMapReady: (controller) async {
+          mapControllerCompleter.complete(controller);
+        },
     );
   }
 }
