@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeeye/screens/login_screen.dart';
 
 class SettingsWidget extends StatefulWidget {
   const SettingsWidget({super.key});
@@ -9,6 +10,15 @@ class SettingsWidget extends StatefulWidget {
 
 class _SettingsWidgetState extends State<SettingsWidget> {
   bool _enableNotification = false;
+
+  void onTapLogout() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LogInScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +53,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
             SizedBox(
               width: double.infinity,
-              child: TextButton(onPressed: () {}, child: const Text('로그아웃')),
+              child: TextButton(
+                onPressed: onTapLogout,
+                child: const Text('로그아웃'),
+              ),
             ),
           ],
         ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:group_button/group_button.dart';
 import 'package:safeeye/widgets/navermap_widget.dart';
-import 'package:safeeye/widgets/report_widget.dart';
 import 'package:safeeye/widgets/settings_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +12,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
+  final TextEditingController _reportController = TextEditingController();
+
+  void onPressedSend() {
+    String text = _reportController.text;
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -35,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: selectedIndex,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.map_rounded),
-              label: '지도',
+            icon: Icon(Icons.map_rounded),
+            label: '지도',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_rounded),
@@ -50,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.teal.shade400,
         foregroundColor: const Color(0xFFF8F6F4),
         child: const Icon(Icons.warning_rounded),
         onPressed: () {
@@ -72,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _reportController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white70,
@@ -88,8 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
+                        onPressed: onPressedSend,
                         child: const Text('제출하기'),
-                        onPressed: () {},
                       ),
                     )
                   ],

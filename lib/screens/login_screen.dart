@@ -14,7 +14,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController _pwdController = TextEditingController();
 
   void onClickLogIn() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const HomeScreen(),
@@ -35,119 +35,145 @@ class _LogInScreenState extends State<LogInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                'SafeEye',
-                style: TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.w400,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Text(
+                  'SafeEye',
+                  style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 100),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              child: Container(
+              const SizedBox(height: 100),
+              Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Column(
-                  children: [
-                    const Text(
-                      '로그인',
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    TextField(
-                      controller: _idController,
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        '로그인',
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.w500),
                       ),
-                      decoration: const InputDecoration(
-                        labelText: 'ID',
-                        labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide(
-                            width: 1,
-                          ),
-                        ),
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    TextField(
-                      controller: _pwdController,
-                      textAlign: TextAlign.start,
-                      obscureText: true,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: '비밀번호',
-                        labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      TextField(
+                        controller: _idController,
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(
-                            width: 1,
+                        decoration: const InputDecoration(
+                          labelText: 'ID',
+                          labelStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                              width: 1,
+                            ),
                           ),
-                          borderSide: BorderSide(
-                            width: 1,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide(
+                              width: 1,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1),
+                      const SizedBox(
+                        height: 30,
                       ),
-                      child: SizedBox(
+                      TextField(
+                        controller: _pwdController,
+                        textAlign: TextAlign.start,
+                        obscureText: true,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: '비밀번호',
+                          labelStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide(
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                        child: SizedBox(
+                          height: 60,
+                          width: 400,
+                          child: ElevatedButton(
+                            onPressed: onClickLogIn,
+                            child: const Text(
+                              '로그인',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(1),
+                        ),
                         height: 60,
                         width: 400,
                         child: ElevatedButton(
-                          onPressed: onClickLogIn,
+                          onPressed: onClickSignUp,
                           child: const Text(
-                            '로그인',
+                            '회원가입',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w500,
@@ -155,32 +181,12 @@ class _LogInScreenState extends State<LogInScreen> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1),
-                      ),
-                      height: 60,
-                      width: 400,
-                      child: ElevatedButton(
-                        onPressed: onClickSignUp,
-                        child: const Text(
-                          '회원가입',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
