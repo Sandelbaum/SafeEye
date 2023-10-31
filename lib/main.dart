@@ -1,21 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safeeye/color_schemes.dart';
 import 'package:safeeye/screens/login_screen.dart';
 
 void main() async {
   await _initialize();
   runApp(const SafeEye());
-}
-
-getPermission() async {
-  Map<Permission, PermissionStatus> statuses = await [
-    Permission.locationAlways,
-    Permission.notification,
-  ].request();
 }
 
 class SafeEye extends StatefulWidget {
@@ -29,7 +24,6 @@ class _SafeEyeState extends State<SafeEye> {
   @override
   void initState() {
     super.initState();
-    getPermission();
   }
 
   @override
@@ -37,10 +31,12 @@ class _SafeEyeState extends State<SafeEye> {
     return MaterialApp(
       home: const LogInScreen(),
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
-        ),
-        brightness: Brightness.light,
+        colorScheme: lightColorScheme,
+        fontFamily: 'Pretendard',
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: darkColorScheme,
         fontFamily: 'Pretendard',
         useMaterial3: true,
       ),
@@ -51,7 +47,39 @@ class _SafeEyeState extends State<SafeEye> {
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(
-    clientId: '08qpd7rrsb',
     onAuthFailed: (e) => log("네이버 맵 인증오류: $e", name: "onAuthFailed"),
   );
+
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.locationWhenInUse,
+    Permission.notification,
+  ].request();
+  AndroidInitializationSettings androidInitializationSettings =
+      const AndroidInitializationSettings('mipmap/ic_launcher');
+  DarwinInitializationSettings darwinInitializationSettings =
+      const DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
+  InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: darwinInitializationSettings);
+  await FlutterLocalNotificationsPlugin().initialize(initializationSettings);
+  if (statuses[Permission.locationWhenInUse]!.isGranted &&
+      statuses[Permission.notification]!.isGranted) {
+    return;
+  } else {
+    await openAppSettings();
+    if (statuses[Permission.locationWhenInUse]!.isGranted == false ||
+        statuses[Permission.notification]!.isGranted == false) {
+      Fluttertoast.showToast(
+        msg: '권한이 부여되지 않았습니다. 앱을 종료합니다.',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      exit(1);
+    }
+    return;
+  }
 }

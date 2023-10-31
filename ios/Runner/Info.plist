@@ -45,5 +45,17 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NMFClientId</key>
+	<string>08qpd7rrsb</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>[USAGE PERPOSE]</string>
 </dict>
 </plist>

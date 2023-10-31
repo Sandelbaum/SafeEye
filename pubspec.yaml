@@ -39,6 +39,9 @@ dependencies:
   flutter_naver_map: ^1.0.2
   permission_handler: ^11.0.0
   group_button: ^5.3.3
+  flutter_local_notifications: ^15.1.1
+  fluttertoast: ^8.2.2
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -111,5 +114,5 @@ fonts:
           weight: 700
         - asset: assets/fonts/Pretendard-ExtraBold.ttf
           weight: 800
-        - asset: fonts/Pretendard-Black.ttf
+        - asset: assets/fonts/Pretendard-Black.ttf
           weight: 900

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:safeeye/screens/login_screen.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SettingsWidget extends StatefulWidget {
-  const SettingsWidget({super.key});
+  const SettingsWidget({Key? key, required this.channel}) : super(key: key);
 
+  final WebSocketChannel channel;
   @override
   State<SettingsWidget> createState() => _SettingsWidgetState();
 }
@@ -12,6 +14,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   bool _enableNotification = false;
 
   void onTapLogout() {
+    widget.channel.sink.close();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

@@ -1,6 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:safeeye/models/data_model.dart';
 import 'package:safeeye/screens/home_screen.dart';
 import 'package:safeeye/screens/signup_screen.dart';
+import 'package:web_socket_channel/io.dart';
+//import 'package:web_socket_channel/web_socket_channel.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -10,14 +15,62 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  var channel = IOWebSocketChannel.connect('ws://172.17.17.152:8080/ws');
+  late String username;
+  late String password;
+  dynamic msg;
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
 
-  void onClickLogIn() {
-    Navigator.push(
+  void onClickLogIn() async {
+    FocusScope.of(context).unfocus();
+    username = _idController.text;
+    password = _pwdController.text;
+    Map<String, String> data = {
+      'action': 'login',
+      'username': username,
+      'password': password,
+    };
+    var jsondata = jsonEncode(data);
+    channel.sink.add(jsondata);
+    late DataModel datamodel;
+    channel.stream.listen((rcvdata) {
+      final receiveddata = jsonDecode(rcvdata);
+      datamodel = DataModel.fromJson(receiveddata);
+    }, onError: (error) {
+      Fluttertoast.showToast(
+        msg: error,
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    });
+    if (datamodel.code == 'ack') {
+      Fluttertoast.showToast(
+        msg: datamodel.message,
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    }
+    pushHome(username, channel);
+  }
+
+  void onDone() {
+    Fluttertoast.showToast(
+      msg: "연결 종료됨",
+      gravity: ToastGravity.BOTTOM,
+      textColor: Colors.white,
+    );
+  }
+
+  void onError(e) {
+    print("onError: $e");
+  }
+
+  void pushHome(String username, IOWebSocketChannel channel) async {
+    await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => HomeScreen(username: username, channel: channel),
       ),
     );
   }
@@ -34,7 +87,14 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text(
+          '로그인',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();

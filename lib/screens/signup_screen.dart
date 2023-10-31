@@ -15,7 +15,12 @@ class _LogInScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text(
+          '회원가입',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();

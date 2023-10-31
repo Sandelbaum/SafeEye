@@ -15,14 +15,14 @@ class _NaverMapWidgetState extends State<NaverMapWidget> {
   @override
   Widget build(BuildContext context) {
     return NaverMap(
-        options: const NaverMapViewOptions(
-          indoorEnable: true,
-          locationButtonEnable: true,
-          consumeSymbolTapEvents: false,
-        ),
-        onMapReady: (controller) async {
-          mapControllerCompleter.complete(controller);
-        },
+      options: const NaverMapViewOptions(
+        indoorEnable: false,
+        locationButtonEnable: true,
+        consumeSymbolTapEvents: false,
+      ),
+      onMapReady: (controller) async {
+        mapControllerCompleter.complete(controller);
+      },
     );
   }
 }

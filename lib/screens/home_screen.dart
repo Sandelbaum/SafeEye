@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:group_button/group_button.dart';
 import 'package:safeeye/widgets/navermap_widget.dart';
 import 'package:safeeye/widgets/settings_widget.dart';
+import 'package:web_socket_channel/io.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key, required this.username, required this.channel})
+      : super(key: key);
+  final String username;
+  final IOWebSocketChannel channel;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -16,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onPressedSend() {
     String text = _reportController.text;
+
     Navigator.pop(context);
   }
 
@@ -30,9 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: IndexedStack(
           index: selectedIndex,
-          children: const [
-            NaverMapWidget(),
-            SettingsWidget(),
+          children: [
+            const NaverMapWidget(),
+            SettingsWidget(channel: widget.channel),
           ],
         ),
       ),
@@ -54,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal.shade400,
         foregroundColor: const Color(0xFFF8F6F4),
@@ -80,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       controller: _reportController,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white70,
+                        //fillColor: Colors.white70,
                         hintText: '자세한 상황을 설명해 주세요',
                         labelText: '자세한 상황을 설명해 주세요',
                         border: OutlineInputBorder(
@@ -97,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: onPressedSend,
                         child: const Text('제출하기'),
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -105,7 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
