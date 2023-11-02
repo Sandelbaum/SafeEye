@@ -19,9 +19,7 @@ enum Types {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.username, required this.socket})
-      : super(key: key);
-  final String username;
+  const HomeScreen({Key? key, required this.socket}) : super(key: key);
   final io.Socket socket;
   @override
   State<HomeScreen> createState() => _HomeScreenState();

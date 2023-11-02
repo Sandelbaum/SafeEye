@@ -18,7 +18,6 @@ class _LogInScreenState extends State<LogInScreen> {
   StreamController streamController = StreamController();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
-  late String username;
 
   @override
   void initState() {
@@ -34,7 +33,7 @@ class _LogInScreenState extends State<LogInScreen> {
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );
-        pushHome(username, widget.socket);
+        pushHome(widget.socket);
       },
     );
     widget.socket.on(
@@ -54,7 +53,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void onClickLogIn() async {
     FocusScope.of(context).unfocus();
-    username = _idController.text;
+    String username = _idController.text;
     String password = _pwdController.text;
     Map<String, String> data = {
       'username': username,
@@ -76,11 +75,11 @@ class _LogInScreenState extends State<LogInScreen> {
     print("onError: $e");
   }
 
-  void pushHome(String username, io.Socket socket) async {
+  void pushHome(io.Socket socket) async {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeScreen(username: username, socket: socket),
+        builder: (context) => HomeScreen(socket: socket),
       ),
     );
   }
