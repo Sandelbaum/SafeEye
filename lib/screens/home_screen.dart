@@ -47,8 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
     dynamic data = {'type': type, 'msg': msg};
     widget.socket.emit('report', jsonEncode(data));
     widget.socket.on('report_success', (receive) {
+      List<dynamic> jsondata = jsonDecode(receive);
+      Map<String, String> mapdata = {'msg': jsondata[0]};
       Fluttertoast.showToast(
-        msg: '신고 완료',
+        msg: mapdata['msg']!,
         gravity: ToastGravity.BOTTOM,
         textColor: Colors.white,
       );

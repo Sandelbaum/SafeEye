@@ -28,11 +28,9 @@ class _LogInScreenState extends State<LogInScreen> {
     widget.socket.on(
       'login_success',
       (response) {
-        print(response);
-        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
-        print(datamodel);
+        Map<String, dynamic> mapdata = response;
         Fluttertoast.showToast(
-          msg: datamodel.message,
+          msg: mapdata['msg'],
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );
@@ -43,9 +41,10 @@ class _LogInScreenState extends State<LogInScreen> {
       'login_error',
       (response) {
         print(response);
-        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
+        Map<String, dynamic> mapdata = jsonDecode(response);
+        print(mapdata);
         Fluttertoast.showToast(
-          msg: datamodel.message,
+          msg: mapdata['msg'],
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );

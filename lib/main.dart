@@ -12,7 +12,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 void main() async {
   await _initialize();
   io.Socket socket = io.io(
-    'http://172.17.13.71:8000',
+    'http://172.17.3.124:8000',
     io.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()

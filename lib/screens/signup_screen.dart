@@ -26,9 +26,9 @@ class _LogInScreenState extends State<SignUpScreen> {
     widget.socket.on(
       'register_success',
       (response) {
-        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
+        Map<String, dynamic> mapdata = response;
         Fluttertoast.showToast(
-          msg: datamodel.message,
+          msg: mapdata['msg'],
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );
@@ -45,9 +45,9 @@ class _LogInScreenState extends State<SignUpScreen> {
     widget.socket.on(
       'register_fail',
       (response) {
-        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
+        Map<String, dynamic> mapdata = jsonDecode(response);
         Fluttertoast.showToast(
-          msg: datamodel.message,
+          msg: mapdata['msg'],
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );
@@ -68,7 +68,7 @@ class _LogInScreenState extends State<SignUpScreen> {
 
     if (!regExp.hasMatch(email)) {
       Fluttertoast.showToast(
-        msg: '올바른 이메일을 입력해주세요.',
+        msg: '올바른 이메일을 입력해주세요',
         gravity: ToastGravity.BOTTOM,
         textColor: Colors.white,
       );
@@ -76,7 +76,7 @@ class _LogInScreenState extends State<SignUpScreen> {
     }
     if (password != chkpassword) {
       Fluttertoast.showToast(
-        msg: '',
+        msg: '비밀번호가 서로 다릅니다',
         gravity: ToastGravity.BOTTOM,
         textColor: Colors.white,
       );
