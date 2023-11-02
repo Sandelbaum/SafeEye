@@ -1,6 +1,8 @@
 class DataModel {
-  final String code, message;
+  final String message;
+  final String lat, lon;
   DataModel.fromJson(Map<String, dynamic> json)
-      : code = json['code'],
-        message = json['string'];
+      : message = json['msg'],
+        lat = json['lat'],
+        lon = json['lon'];
 }

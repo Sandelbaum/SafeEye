@@ -7,15 +7,36 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:safeeye/color_schemes.dart';
 import 'package:safeeye/screens/login_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 void main() async {
   await _initialize();
-  runApp(const SafeEye());
+  io.Socket socket = io.io(
+    'http://172.17.13.71:8000',
+    io.OptionBuilder()
+        .setTransports(['websocket'])
+        .disableAutoConnect()
+        .build(),
+  );
+  socket.connect();
+  socket.on(
+    'connect_error',
+    (error) {
+      Fluttertoast.showToast(
+        msg: error.toString(),
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    },
+  );
+  runApp(SafeEye(
+    socket: socket,
+  ));
 }
 
 class SafeEye extends StatefulWidget {
-  const SafeEye({super.key});
-
+  const SafeEye({Key? key, required this.socket}) : super(key: key);
+  final io.Socket socket;
   @override
   State<SafeEye> createState() => _SafeEyeState();
 }
@@ -29,7 +50,9 @@ class _SafeEyeState extends State<SafeEye> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const LogInScreen(),
+      home: LogInScreen(
+        socket: widget.socket,
+      ),
       theme: ThemeData(
         colorScheme: lightColorScheme,
         fontFamily: 'Pretendard',

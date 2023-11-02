@@ -1,57 +1,68 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:safeeye/models/data_model.dart';
 import 'package:safeeye/screens/home_screen.dart';
 import 'package:safeeye/screens/signup_screen.dart';
-import 'package:web_socket_channel/io.dart';
-//import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class LogInScreen extends StatefulWidget {
-  const LogInScreen({super.key});
-
+  const LogInScreen({Key? key, required this.socket}) : super(key: key);
+  final io.Socket socket;
   @override
   State<LogInScreen> createState() => _LogInScreenState();
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  var channel = IOWebSocketChannel.connect('ws://172.17.17.152:8080/ws');
-  late String username;
-  late String password;
-  dynamic msg;
+  StreamController streamController = StreamController();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
+  late String username;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.socket.off('register_success');
+    widget.socket.off('register_fail');
+    widget.socket.on(
+      'login_success',
+      (response) {
+        print(response);
+        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
+        print(datamodel);
+        Fluttertoast.showToast(
+          msg: datamodel.message,
+          gravity: ToastGravity.BOTTOM,
+          textColor: Colors.white,
+        );
+        pushHome(username, widget.socket);
+      },
+    );
+    widget.socket.on(
+      'login_error',
+      (response) {
+        print(response);
+        DataModel datamodel = DataModel.fromJson(jsonDecode(response));
+        Fluttertoast.showToast(
+          msg: datamodel.message,
+          gravity: ToastGravity.BOTTOM,
+          textColor: Colors.white,
+        );
+      },
+    );
+  }
 
   void onClickLogIn() async {
     FocusScope.of(context).unfocus();
     username = _idController.text;
-    password = _pwdController.text;
+    String password = _pwdController.text;
     Map<String, String> data = {
-      'action': 'login',
       'username': username,
-      'password': password,
+      'hashed_password': password,
     };
     var jsondata = jsonEncode(data);
-    channel.sink.add(jsondata);
-    late DataModel datamodel;
-    channel.stream.listen((rcvdata) {
-      final receiveddata = jsonDecode(rcvdata);
-      datamodel = DataModel.fromJson(receiveddata);
-    }, onError: (error) {
-      Fluttertoast.showToast(
-        msg: error,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-      );
-    });
-    if (datamodel.code == 'ack') {
-      Fluttertoast.showToast(
-        msg: datamodel.message,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-      );
-    }
-    pushHome(username, channel);
+    widget.socket.emit('login', jsondata);
   }
 
   void onDone() {
@@ -66,11 +77,11 @@ class _LogInScreenState extends State<LogInScreen> {
     print("onError: $e");
   }
 
-  void pushHome(String username, IOWebSocketChannel channel) async {
+  void pushHome(String username, io.Socket socket) async {
     await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeScreen(username: username, channel: channel),
+        builder: (context) => HomeScreen(username: username, socket: socket),
       ),
     );
   }
@@ -79,7 +90,7 @@ class _LogInScreenState extends State<LogInScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
+        builder: (context) => SignUpScreen(socket: widget.socket),
       ),
     );
   }
@@ -100,6 +111,7 @@ class _LogInScreenState extends State<LogInScreen> {
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

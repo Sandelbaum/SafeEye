@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:safeeye/widgets/navermap_widget.dart';
 import 'package:safeeye/widgets/settings_widget.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
+
+enum Types {
+  assault('폭행'),
+  theft('절도'),
+  knife('칼부림'),
+  fall('쓰러짐'),
+  other('기타');
+
+  const Types(this.korean);
+  final String korean;
+}
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.username, required this.channel})
+  const HomeScreen({Key? key, required this.username, required this.socket})
       : super(key: key);
   final String username;
-  final IOWebSocketChannel channel;
+  final io.Socket socket;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -16,10 +27,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final TextEditingController _reportController = TextEditingController();
+  final GroupButtonController _groupButtonController = GroupButtonController();
 
   void onPressedSend() {
+    String type = Types.values[_groupButtonController.selectedIndex].korean;
     String text = _reportController.text;
-
     Navigator.pop(context);
   }
 
@@ -35,8 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: IndexedStack(
           index: selectedIndex,
           children: [
-            const NaverMapWidget(),
-            SettingsWidget(channel: widget.channel),
+            NaverMapWidget(socket: widget.socket),
+            SettingsWidget(socket: widget.socket),
           ],
         ),
       ),
@@ -113,44 +125,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-// BottomAppBar(
-// shape: const CircularNotchedRectangle(),
-// child: Row(
-// mainAxisAlignment: MainAxisAlignment.spaceAround,
-// children: [
-// IconButton(
-// icon: const Icon(Icons.map_rounded),
-// onPressed: () {},
-// ),
-// const SizedBox(),
-// IconButton(
-// icon: const Icon(Icons.settings_rounded),
-// onPressed: () {},
-// ),
-// ],
-// ),
-// ),
-
-
-// NavigationBar(
-// selectedIndex: selectedIndex,
-// onDestinationSelected: (value) => setState(() {
-// selectedIndex = value;
-// }),
-// destinations: const [
-// NavigationDestination(
-// icon: Icon(Icons.house),
-// label: '홈',
-// ),
-// NavigationDestination(
-// icon: Icon(Icons.warning_rounded),
-// label: '신고',
-// ),
-// NavigationDestination(
-// icon: Icon(Icons.settings),
-// label: '설정',
-// ),
-// ],
-// ),
