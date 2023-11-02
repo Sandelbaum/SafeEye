@@ -78,7 +78,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   void pushHome(String username, io.Socket socket) async {
-    await Navigator.pushReplacement(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => HomeScreen(username: username, socket: socket),

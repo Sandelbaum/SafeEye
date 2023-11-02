@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:group_button/group_button.dart';
 import 'package:safeeye/widgets/navermap_widget.dart';
 import 'package:safeeye/widgets/settings_widget.dart';
@@ -30,8 +33,26 @@ class _HomeScreenState extends State<HomeScreen> {
   final GroupButtonController _groupButtonController = GroupButtonController();
 
   void onPressedSend() {
-    String type = Types.values[_groupButtonController.selectedIndex].korean;
-    String text = _reportController.text;
+    FocusScope.of(context).unfocus();
+    if (_groupButtonController.selectedIndex == null) {
+      Fluttertoast.showToast(
+        msg: '사건의 종류를 선택해주세요',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      return;
+    }
+    String type = Types.values[_groupButtonController.selectedIndex!].korean;
+    String msg = _reportController.text;
+    dynamic data = {'type': type, 'msg': msg};
+    widget.socket.emit('report', jsonEncode(data));
+    widget.socket.on('report_success', (receive) {
+      Fluttertoast.showToast(
+        msg: '신고 완료',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    });
     Navigator.pop(context);
   }
 
