@@ -4,8 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:safeeye/screens/login_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-import '../models/data_model.dart';
-
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key, required this.socket}) : super(key: key);
   final io.Socket socket;

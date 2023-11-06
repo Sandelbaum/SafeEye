@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:safeeye/models/data_model.dart';
 import 'package:safeeye/screens/home_screen.dart';
 import 'package:safeeye/screens/signup_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -39,9 +38,7 @@ class _LogInScreenState extends State<LogInScreen> {
     widget.socket.on(
       'login_error',
       (response) {
-        print(response);
         Map<String, dynamic> mapdata = response;
-        print(mapdata);
         Fluttertoast.showToast(
           msg: mapdata['msg'],
           gravity: ToastGravity.BOTTOM,
