@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -77,18 +76,6 @@ Future<void> _initialize() async {
     Permission.locationWhenInUse,
     Permission.notification,
   ].request();
-  AndroidInitializationSettings androidInitializationSettings =
-      const AndroidInitializationSettings('mipmap/ic_launcher');
-  DarwinInitializationSettings darwinInitializationSettings =
-      const DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-  InitializationSettings initializationSettings = InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: darwinInitializationSettings);
-  await FlutterLocalNotificationsPlugin().initialize(initializationSettings);
   if (statuses[Permission.locationWhenInUse]!.isGranted &&
       statuses[Permission.notification]!.isGranted) {
     return;

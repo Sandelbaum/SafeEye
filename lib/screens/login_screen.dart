@@ -40,7 +40,7 @@ class _LogInScreenState extends State<LogInScreen> {
       'login_error',
       (response) {
         print(response);
-        Map<String, dynamic> mapdata = jsonDecode(response);
+        Map<String, dynamic> mapdata = response;
         print(mapdata);
         Fluttertoast.showToast(
           msg: mapdata['msg'],
@@ -61,6 +61,7 @@ class _LogInScreenState extends State<LogInScreen> {
     };
     var jsondata = jsonEncode(data);
     widget.socket.emit('login', jsondata);
+    pushHome(widget.socket);
   }
 
   void onDone() {
@@ -69,10 +70,6 @@ class _LogInScreenState extends State<LogInScreen> {
       gravity: ToastGravity.BOTTOM,
       textColor: Colors.white,
     );
-  }
-
-  void onError(e) {
-    print("onError: $e");
   }
 
   void pushHome(io.Socket socket) async {

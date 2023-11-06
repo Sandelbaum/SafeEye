@@ -14,7 +14,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   bool _enableNotification = false;
 
   void onTapLogout() {
-    widget.socket.close();
+    widget.socket.off('alert');
+    widget.socket.off('report_success');
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

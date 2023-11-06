@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:group_button/group_button.dart';
+import 'package:safeeye/services/notification_service.dart';
 import 'package:safeeye/widgets/navermap_widget.dart';
 import 'package:safeeye/widgets/settings_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -25,14 +28,31 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int selectedIndex = 0;
+  int groupbuttonIndex = -1;
+  List<NLatLng> locations = [];
   final TextEditingController _reportController = TextEditingController();
-  final GroupButtonController _groupButtonController = GroupButtonController();
+
+  @override
+  void initState() {
+    FlutterLocalNotification.init();
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        widget.socket.on('alert', (data) async {
+          Map<String, dynamic> mapdata = data;
+          await FlutterLocalNotification.showNotification(
+              '사건 발생!', mapdata['msg']);
+        });
+      },
+    );
+  }
 
   void onPressedSend() {
     FocusScope.of(context).unfocus();
-    if (_groupButtonController.selectedIndex == null) {
+    if (groupbuttonIndex == -1) {
       Fluttertoast.showToast(
         msg: '사건의 종류를 선택해주세요',
         gravity: ToastGravity.BOTTOM,
@@ -40,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       return;
     }
-    String type = Types.values[_groupButtonController.selectedIndex!].korean;
+    String type = Types.values[groupbuttonIndex].korean;
     String msg = _reportController.text;
     dynamic data = {'type': type, 'msg': msg};
     widget.socket.emit('report', jsonEncode(data));
@@ -53,12 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
         textColor: Colors.white,
       );
     });
+    _reportController.clear();
     Navigator.pop(context);
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -111,7 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(100),
                       ),
                       buttons: const ['폭행', '절도', '칼부림', '쓰러짐', '기타'],
-                      onSelected: (value, index, isSelected) {},
+                      onSelected: (value, index, isSelected) {
+                        groupbuttonIndex = index;
+                      },
                     ),
                     const SizedBox(height: 16),
                     TextField(
