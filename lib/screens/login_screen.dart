@@ -14,7 +14,6 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  StreamController streamController = StreamController();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
 
@@ -32,6 +31,7 @@ class _LogInScreenState extends State<LogInScreen> {
           gravity: ToastGravity.BOTTOM,
           textColor: Colors.white,
         );
+        widget.socket.off('login_success');
         pushHome(widget.socket);
       },
     );
@@ -58,7 +58,6 @@ class _LogInScreenState extends State<LogInScreen> {
     };
     var jsondata = jsonEncode(data);
     widget.socket.emit('login', jsondata);
-    pushHome(widget.socket);
   }
 
   void onDone() {

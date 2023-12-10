@@ -11,7 +11,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 void main() async {
   await _initialize();
   io.Socket socket = io.io(
-    'http://172.17.3.124:8000',
+    'http://192.168.0.197:8080',
     io.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()
